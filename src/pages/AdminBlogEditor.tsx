@@ -20,9 +20,11 @@ import {
   Send,
   Library,
   Upload,
+  Loader2,
 } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import ImageGalleryModal from "@/src/components/admin/ImageGalleryModal";
+import imageCompression from "browser-image-compression";
 
 export default function AdminBlogEditor() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -37,21 +39,45 @@ export default function AdminBlogEditor() {
       "https://images.unsplash.com/photo-1541913055-943f98247ee1?auto=format&fit=crop&q=80&w=2070",
     author: "",
   });
+  const [localPreview, setLocalPreview] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const compressImage = async (file: File) => {
+    const options = {
+      maxSizeMB: 0.5,
+      maxWidthOrHeight: 1600,
+      useWebWorker: true,
+    };
+    try {
+      return await imageCompression(file, options);
+    } catch (error) {
+      console.error("Compression error:", error);
+      return file;
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
+    if (!file) return;
+
+    setLoading(true);
+    try {
+      const compressedFile = await compressImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData({ ...formData, image: reader.result as string });
+        setLoading(false);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressedFile);
+    } catch (error) {
+      console.error("Upload error:", error);
+      setLoading(false);
     }
   };
 
   const handleGallerySelect = (url: string) => {
     setFormData({ ...formData, image: url });
+    setLocalPreview(null);
   };
 
   useEffect(() => {
@@ -96,6 +122,7 @@ export default function AdminBlogEditor() {
     e.preventDefault();
     setLoading(true);
     const path = "blog";
+
     try {
       await addDoc(collection(db, path), {
         ...formData,
@@ -105,7 +132,8 @@ export default function AdminBlogEditor() {
       alert("Đăng bài thành công!");
       navigate("/admin");
     } catch (error) {
-      handleFirestoreError(error, OperationType.CREATE, path);
+      console.error("Error submitting blog:", error);
+      alert("Có lỗi xảy ra khi đăng bài.");
     } finally {
       setLoading(false);
     }
@@ -182,7 +210,11 @@ export default function AdminBlogEditor() {
                 <div className="flex gap-4">
                   <input
                     type="text"
-                    value={formData.image}
+                    value={
+                      formData.image.startsWith("data:")
+                        ? "Đang chuẩn bị ảnh..."
+                        : formData.image
+                    }
                     onChange={(e) =>
                       setFormData({ ...formData, image: e.target.value })
                     }
@@ -190,9 +222,9 @@ export default function AdminBlogEditor() {
                     placeholder="Link ảnh Unsplash..."
                   />
                   <div className="w-12 h-12 bg-stone-100 flex items-center justify-center text-stone-300 border border-stone-200 overflow-hidden">
-                    {formData.image ? (
+                    {localPreview || formData.image ? (
                       <img
-                        src={formData.image}
+                        src={localPreview || formData.image}
                         alt="Preview"
                         className="w-full h-full object-cover"
                       />
@@ -205,12 +237,13 @@ export default function AdminBlogEditor() {
                 <div className="flex items-center gap-4 px-2">
                   <label className="cursor-pointer bg-stone-100 hover:bg-stone-200 text-brown-dark px-4 py-2 text-[10px] uppercase tracking-widest font-bold transition-all flex items-center gap-2 border border-stone-200">
                     <Upload size={14} />
-                    Chọn ảnh từ thiết bị
+                    {loading ? "Đang xử lý..." : "Chọn ảnh từ thiết bị"}
                     <input
                       type="file"
                       accept="image/*"
                       className="hidden"
                       onChange={handleFileUpload}
+                      disabled={loading}
                     />
                   </label>
                   <button
@@ -221,11 +254,13 @@ export default function AdminBlogEditor() {
                     <Library size={14} />
                     Thư viện công ty
                   </button>
-                  {formData.image && formData.image.startsWith("data:") && (
-                    <span className="text-[10px] text-green-600 font-bold uppercase tracking-widest">
-                      Đã tải lên
-                    </span>
-                  )}
+                  {formData.image &&
+                    !formData.image.startsWith("https://images.unsplash.com") &&
+                    !localPreview && (
+                      <span className="text-[10px] text-green-600 font-bold uppercase tracking-widest flex items-center gap-1">
+                        ✓ Đã tải lên
+                      </span>
+                    )}
                 </div>
               </div>
             </div>
@@ -265,9 +300,17 @@ export default function AdminBlogEditor() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-brown-dark text-gold font-bold py-6 uppercase tracking-[0.3em] text-xs hover:bg-gold hover:text-white transition-all shadow-xl flex items-center justify-center gap-4 group disabled:opacity-50"
+              className="w-full bg-brown-dark text-gold font-bold py-6 uppercase tracking-[0.3em] text-xs hover:bg-gold hover:text-gold-light transition-all shadow-xl flex items-center justify-center gap-4 group disabled:opacity-50"
             >
-              {loading ? "Đang lưu..." : "Lưu và Đăng Bài"} <Save size={16} />
+              {loading ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  Đang xử lý...
+                </>
+              ) : (
+                "Lưu và Đăng Bài"
+              )}{" "}
+              <Save size={16} />
             </button>
           </form>
         </motion.div>
