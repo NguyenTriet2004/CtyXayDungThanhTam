@@ -2,7 +2,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
 import { Quote, Star } from "lucide-react";
-
+import levanminh from "../../assets/images/levanminh.jpg";
+import nguyenthicam from "../../assets/images/nguyenthicam.jpg";
+import regenedratedImage from "../../assets/images/regenerated_image_1778332926942.png";
 const reviews = [
   {
     name: "Ông Nguyễn Văn Hùng",
@@ -10,7 +12,7 @@ const reviews = [
     comment:
       "Tôi rất hài lòng với sự tận tâm và chuyên nghiệp của Thành Tâm. Ngôi nhà của tôi được hoàn thiện đẹp hơn cả mong đợi.",
     rating: 5,
-    avatar: "/src/assets/images/regenerated_image_1778332926942.png",
+    avatar: regenedratedImage,
   },
   {
     name: "Bà Trần Thị Cẩm",
@@ -18,7 +20,7 @@ const reviews = [
     comment:
       "Phong cách thiết kế cổ điển của công ty rất đẳng cấp. Mọi chi tiết đều được chăm chút tỉ mỉ, tạo nên một không gian vô cùng sang trọng.",
     rating: 5,
-    avatar: "/src/assets/images/nguyenthicam.jpg",
+    avatar: nguyenthicam,
   },
   {
     name: "Ông Lê Văn Minh",
@@ -26,7 +28,7 @@ const reviews = [
     comment:
       "Tiến độ thi công nhanh chóng nhưng vẫn đảm bảo chất lượng tuyệt đối. Đây chắc chắn là đối tác tin cậy lâu dài của chúng tôi.",
     rating: 5,
-    avatar: "/src/assets/images/levanminh.jpg",
+    avatar: levanminh,
   },
 ];
 

@@ -10,7 +10,9 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-
+import thicongxaydung from "../assets/images/thicongxaydung.jpg";
+import thietkekientruc from "../assets/images/thietkekientruc.jpg";
+import thietkenoithat from "../assets/images/thietkenoithat.jpg";
 const detailedServices = [
   {
     id: "architectural-design",
@@ -18,7 +20,7 @@ const detailedServices = [
     description:
       "Chúng tôi tạo ra những không gian sống độc bản, kết hợp giữa tính thẩm mỹ nghệ thuật và công năng sử dụng tối ưu. Mỗi bản thiết kế là một câu chuyện riêng biệt về phong cách của gia chủ.",
     icon: <Ruler className="text-gold" size={40} />,
-    image: "/src/assets/images/thietkekientruc.jpg",
+    image: thietkekientruc,
     features: [
       "Thiết kế kiến trúc biệt thự, nhà phố",
       "Quy hoạch mặt bằng tổng thể",
@@ -32,7 +34,7 @@ const detailedServices = [
     description:
       "Với đội ngũ kỹ sư và công nhân lành nghề, Thành Tâm cam kết chất lượng thi công đạt chuẩn cao nhất, đảm bảo tính bền vững và an toàn tuyệt đối cho mọi công trình.",
     icon: <HardHat className="text-gold" size={40} />,
-    image: "/src/assets/images/thicongxaydung.jpg",
+    image: thicongxaydung,
     features: [
       "Thi công phần thô & hoàn thiện",
       "Xây dựng trọn gói (Chìa khóa trao tay)",
@@ -46,7 +48,7 @@ const detailedServices = [
     description:
       "Hoàn thiện không gian sống với các món đồ nội thất tinh xảo, chất liệu cao cấp. Chúng tôi chuyên dòng nội thất Tân cổ điển & Luxury mang lại sự quyền quý cho ngôi nhà.",
     icon: <Sofa className="text-gold" size={40} />,
-    image: "/src/assets/images/thietkenoithat.jpg",
+    image: thietkenoithat,
     features: [
       "Sản xuất nội thất thủ công mỹ nghệ",
       "Trang trí phào chỉ - dát vàng",
