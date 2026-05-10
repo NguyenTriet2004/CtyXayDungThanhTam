@@ -1,0 +1,96 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and role information",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "user"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "role"]
+    },
+    "BlogPost": {
+      "title": "Blog Post",
+      "description": "A blog article published by the company",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "excerpt": { "type": "string" },
+        "content": { "type": "string" },
+        "image": { "type": "string" },
+        "author": { "type": "string" },
+        "date": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "category", "content", "author", "createdAt"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "A completed construction or architecture project",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "image": { "type": "string" },
+        "year": { "type": "string" },
+        "description": { "type": "string" },
+        "details": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "category", "image", "year", "createdAt"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "A contact form submission from a potential client",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "service": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "phone", "message", "createdAt"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "A client testimonial",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "position": { "type": "string" },
+        "comment": { "type": "string" },
+        "rating": { "type": "integer" },
+        "avatar": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "comment", "rating", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile and role management"
+    },
+    "/blog/{postId}": {
+      "schema": "BlogPost",
+      "description": "Company blog articles"
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Portfolio of completed works"
+    },
+    "/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Customer enquiries"
+    },
+    "/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Customer testimonials"
+    }
+  }
+}
