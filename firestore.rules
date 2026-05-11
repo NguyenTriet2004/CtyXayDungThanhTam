@@ -1,48 +1,49 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Chặn tất cả theo mặc định
     match /{document=**} {
       allow read, write: if false;
     }
 
+    // Helper functions
     function isSignedIn() { return request.auth != null; }
     function isAdmin() { 
+      // Kiểm tra email admin chính xác và đã xác minh
       return isSignedIn() && request.auth.token.email == 'triet1509w@gmail.com' && request.auth.token.email_verified == true;
     }
 
-     match /users/{userId} {
+    // Users: Admin quản lý, User tự xem/sửa profile của mình (không sửa role)
+    match /users/{userId} {
       allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
       allow list: if isAdmin();
       allow create: if isAdmin();
       allow update: if isSignedIn() && request.auth.uid == userId
         && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']);
-      allow delete: if isAdmin();
     }
 
+    // Blog & Projects: Khách xem, Admin viết
     match /blog/{postId} {
-      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'message'])
-  && request.resource.data.message.size() < 1000;
+      allow read: if true;
       allow write: if isAdmin();
     }
 
     match /projects/{projectId} {
-      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'message'])
-  && request.resource.data.message.size() < 1000;
+      allow read: if true;
       allow write: if isAdmin();
     }
 
+    // Messages: Khách gửi, Admin xem/xóa
     match /messages/{messageId} {
       allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'message', 'createdAt'])
         && request.resource.data.name is string
         && request.resource.data.name.size() > 0
-        && request.resource.data.name.size() < 100
         && request.resource.data.phone is string
-        && request.resource.data.message is string
-        && request.resource.data.message.size() > 0
         && request.resource.data.message.size() < 2000;
       allow read, delete: if isAdmin();
     }
 
+    // Reviews: Khách xem, Admin quản lý
     match /reviews/{reviewId} {
       allow read: if true;
       allow write: if isAdmin();
