@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { ArrowRight, Play } from "lucide-react";
 import { Link } from "react-router-dom";
-
+import banner from "../../assets/images/banner.jpg";
 export default function Hero() {
   const { t } = useTranslation();
 
@@ -13,8 +13,7 @@ export default function Hero() {
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 scale-105"
         style={{
-          backgroundImage:
-            'url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=2070")',
+          backgroundImage: `url("${banner}")`,
         }}
       >
         <div className="absolute inset-0 bg-black/50" />
